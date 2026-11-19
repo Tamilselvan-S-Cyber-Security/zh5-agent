@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 420" width="1100" height="420" role="img" aria-label="ZH5 Agent working flow">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1B1C22"/>
+      <stop offset="100%" stop-color="#25262C"/>
+    </linearGradient>
+    <linearGradient id="node" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A2B31"/>
+      <stop offset="100%" stop-color="#22232A"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF8605"/>
+      <stop offset="100%" stop-color="#ffb347"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#FF8605"/>
+    </marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#FF8605" flood-opacity="0.35"/>
+    </filter>
+    <style>
+      .title { font: 800 28px 'Segoe UI', Arial, sans-serif; fill: #FFFFFF; }
+      .sub { font: 600 14px 'Segoe UI', Arial, sans-serif; fill: #B0B0B0; }
+      .n { font: 700 15px 'Segoe UI', Arial, sans-serif; fill: #FFFFFF; }
+      .d { font: 500 12px 'Segoe UI', Arial, sans-serif; fill: #B0B0B0; }
+      .cmd { font: 600 11px Consolas, 'Courier New', monospace; fill: #ffb347; }
+      .box { fill: url(#node); stroke: #3A3B41; stroke-width: 2; }
+      .box-hi { fill: url(#node); stroke: #FF8605; stroke-width: 2.5; filter: url(#glow); }
+      .line { fill: none; stroke: #FF8605; stroke-width: 2.4; marker-end: url(#arrow); }
+      .pill { fill: url(#accent); }
+      .pill-t { font: 800 12px 'Segoe UI', Arial, sans-serif; fill: #111; }
+    </style>
+  </defs>
+
+  <rect width="1100" height="420" rx="18" fill="url(#bg)"/>
+  <text x="40" y="48" class="title">ZH5 Agent — Working Flow</text>
+  <text x="40" y="74" class="sub">Scanner · Vulnerability Finder · Validate · Report  ·  zh5.club</text>
+  <a href="https://zh5.club" target="_blank" rel="noopener noreferrer">
+    <rect x="920" y="28" width="140" height="36" rx="10" class="pill"/>
+    <text x="990" y="51" text-anchor="middle" class="pill-t">zh5.club →</text>
+  </a>
+
+  <!-- Row 1 -->
+  <g>
+    <rect class="box-hi" x="40" y="110" width="150" height="90" rx="14"/>
+    <text x="115" y="145" text-anchor="middle" class="n">1. Scope</text>
+    <text x="115" y="168" text-anchor="middle" class="d">Authorized target</text>
+    <text x="115" y="186" text-anchor="middle" class="cmd">program only</text>
+  </g>
+  <path class="line" d="M190 155 H220"/>
+
+  <g>
+    <rect class="box" x="220" y="110" width="150" height="90" rx="14"/>
+    <text x="295" y="145" text-anchor="middle" class="n">2. Setup</text>
+    <text x="295" y="168" text-anchor="middle" class="d">AI provider</text>
+    <text x="295" y="186" text-anchor="middle" class="cmd">zh5 setup</text>
+  </g>
+  <path class="line" d="M370 155 H400"/>
+
+  <g>
+    <rect class="box-hi" x="400" y="110" width="150" height="90" rx="14"/>
+    <text x="475" y="145" text-anchor="middle" class="n">3. Launch</text>
+    <text x="475" y="168" text-anchor="middle" class="d">Autonomous agent</text>
+    <text x="475" y="186" text-anchor="middle" class="cmd">zh5-agent T</text>
+  </g>
+  <path class="line" d="M550 155 H580"/>
+
+  <g>
+    <rect class="box" x="580" y="110" width="150" height="90" rx="14"/>
+    <text x="655" y="145" text-anchor="middle" class="n">4. Recon</text>
+    <text x="655" y="168" text-anchor="middle" class="d">Surface map</text>
+    <text x="655" y="186" text-anchor="middle" class="cmd">zh5 recon T</text>
+  </g>
+  <path class="line" d="M730 155 H760"/>
+
+  <g>
+    <rect class="box-hi" x="760" y="110" width="150" height="90" rx="14"/>
+    <text x="835" y="145" text-anchor="middle" class="n">5. Scan</text>
+    <text x="835" y="168" text-anchor="middle" class="d">Vuln finder</text>
+    <text x="835" y="186" text-anchor="middle" class="cmd">zh5 scan T</text>
+  </g>
+  <path class="line" d="M910 155 H940"/>
+
+  <g>
+    <rect class="box" x="940" y="110" width="120" height="90" rx="14"/>
+    <text x="1000" y="145" text-anchor="middle" class="n">6. Gate</text>
+    <text x="1000" y="168" text-anchor="middle" class="d">Validate</text>
+    <text x="1000" y="186" text-anchor="middle" class="cmd">7Q gate</text>
+  </g>
+
+  <!-- Row 2: vuln classes under Scan -->
+  <path class="line" d="M835 200 V235"/>
+  <rect class="box" x="40" y="240" width="1020" height="140" rx="16"/>
+  <text x="60" y="272" class="n">Vulnerability Finder Classes</text>
+  <text x="60" y="296" class="d">XSS · SQLi · IDOR · SSRF · LFI · SSTI · XXE · CORS · Auth · JWT · Open Redirect · Race · Cache · Takeover</text>
+  <text x="60" y="328" class="cmd">Leads → Lead Board → Validate → Report (H1 / Bugcrowd / Intigriti / Immunefi)</text>
+  <text x="60" y="356" class="d">Loop: agent requeues high-priority leads until budget ends or status is clean</text>
+</svg>

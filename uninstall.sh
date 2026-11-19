@@ -22,11 +22,11 @@ Examples:
 Options:
   --global          Remove global installation (default)
   --project         Remove project-local installation
-  --purge-config    Also remove ~/.bughunter/config.json
+  --purge-config    Also remove ~/.zh5/config.json and ~/.bughunter/config.json
   -y, --yes         Skip confirmation
   -h, --help        Show this help
 
-The BugHunter configuration is preserved unless --purge-config is supplied.
+The ZH5 Scan configuration is preserved unless --purge-config is supplied.
 EOF
 }
 
@@ -183,7 +183,7 @@ is_managed_bughunter() {
     if [ -L "$path" ]; then
         [ "$(basename "$(readlink "$path")")" = "engine.py" ]
     elif [ -f "$path" ]; then
-        grep -q "Standalone BugHunter CLI" "$path" 2>/dev/null
+        grep -q "Standalone ZH5 Scan CLI" "$path" 2>/dev/null
     else
         return 1
     fi
@@ -221,11 +221,13 @@ uninstall_standalone() {
     if [ -n "${BBHUNTER_BIN_DIR:-}" ]; then
         # Explicit override is intentionally exclusive, which also makes
         # packaging/integration tests unable to touch a real installation.
-        candidates+=("$BBHUNTER_BIN_DIR/bughunter")
+        candidates+=("${ZH5_BIN_DIR:-$BBHUNTER_BIN_DIR}/zh5" "${ZH5_BIN_DIR:-$BBHUNTER_BIN_DIR}/bughunter")
     else
-        active="$(command -v bughunter 2>/dev/null || true)"
+        active="$(command -v zh5 2>/dev/null || true)"
         [ -n "$active" ] && candidates+=("$active")
-        candidates+=("/usr/local/bin/bughunter" "$HOME/.local/bin/bughunter")
+        active_legacy="$(command -v bughunter 2>/dev/null || true)"
+        [ -n "$active_legacy" ] && candidates+=("$active_legacy")
+        candidates+=("/usr/local/bin/zh5" "$HOME/.local/bin/zh5" "/usr/local/bin/bughunter" "$HOME/.local/bin/bughunter")
     fi
 
     for candidate in "${candidates[@]}"; do
@@ -259,12 +261,16 @@ case "$AGENT" in
 esac
 
 if [ "$PURGE_CONFIG" = "yes" ]; then
-    remove_path "$HOME/.bughunter/config.json" "BugHunter configuration"
+    remove_path "$HOME/.zh5/config.json" "ZH5 Scan configuration"
+    remove_path "$HOME/.bughunter/config.json" "Legacy BugHunter configuration"
+    if [ -d "$HOME/.zh5" ] && [ -z "$(find "$HOME/.zh5" -mindepth 1 -maxdepth 1 -print -quit)" ]; then
+        rmdir "$HOME/.zh5"
+    fi
     if [ -d "$HOME/.bughunter" ] && [ -z "$(find "$HOME/.bughunter" -mindepth 1 -maxdepth 1 -print -quit)" ]; then
         rmdir "$HOME/.bughunter"
     fi
 else
-    echo "Preserved configuration: $HOME/.bughunter/config.json"
+    echo "Preserved configuration: $HOME/.zh5/config.json (or ~/.bughunter/config.json)"
 fi
 
 if [ "$removed" -eq 0 ]; then

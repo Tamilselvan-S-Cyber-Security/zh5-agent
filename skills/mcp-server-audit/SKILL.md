@@ -51,7 +51,7 @@ The `description` field of a tool is fed to the model verbatim. A malicious or c
 
 **Hunt:**
 ```
-[ ] Dump every tool description (bughunter mcp tools, or list_tools)
+[ ] Dump every tool description (zh5 mcp tools, or list_tools)
 [ ] Grep descriptions for imperative verbs aimed at the model:
     "ignore", "also", "first read", "before responding", "do not tell",
     "<important>", invisible/zero-width chars, base64 blobs

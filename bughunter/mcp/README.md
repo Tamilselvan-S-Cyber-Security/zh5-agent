@@ -11,8 +11,8 @@ MCP (Model Context Protocol) integrations.
 
 ```bash
 ./install.sh --agent mcp
-bughunter mcp doctor
-bughunter mcp serve
+zh5 mcp doctor
+zh5 mcp serve
 ```
 
 See `docs/mcp.md`. Configure Claude/OpenCode using snippets inside each folder.

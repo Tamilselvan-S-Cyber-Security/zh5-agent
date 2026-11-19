@@ -3,14 +3,14 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "agentic-bug-hunter"
+name = "zh5-scan"
 version = "6.0.1"
-description = "AI-powered bug bounty hunting — recon to report, in your terminal."
+description = "ZH5 Scan — AI-powered bug bounty hunting from recon to report, in your terminal."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-authors = [{ name = "AwareXone" }]
-keywords = ["security", "bug-bounty", "recon", "pentest", "ai-agent", "vulnerability"]
+authors = [{ name = "ZH5 / Tamilselvan-S-Cyber-Security" }]
+keywords = ["security", "bug-bounty", "recon", "pentest", "ai-agent", "vulnerability", "zh5"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -28,11 +28,15 @@ dependencies = [
 test = ["pytest>=8.3.2"]
 
 [project.urls]
-Homepage = "https://github.com/awarexone/Agentic-Bug-Hunter"
-Repository = "https://github.com/awarexone/Agentic-Bug-Hunter"
-Issues = "https://github.com/awarexone/Agentic-Bug-Hunter/issues"
+Homepage = "https://zh5.club"
+Repository = "https://github.com/Tamilselvan-S-Cyber-Security/zh5-agent"
+Issues = "https://github.com/Tamilselvan-S-Cyber-Security/zh5-agent/issues"
+Documentation = "https://github.com/Tamilselvan-S-Cyber-Security/zh5-agent#readme"
 
 [project.scripts]
+zh5 = "bughunter.__main__:main"
+zh5-scan = "bughunter.__main__:main"
+zh5-agent = "bughunter.__main__:agent_main"
 bughunter = "bughunter.__main__:main"
 bughunter-agent = "bughunter.__main__:agent_main"
 

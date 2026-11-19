@@ -14,12 +14,12 @@ This does **not** replace:
 pip install agentic-bug-hunter
 ```
 
-That installs the `bughunter` command. The MCP server runs as `bughunter mcp serve`,
+That installs the `bughunter` command. The MCP server runs as `zh5 mcp serve`,
 so the same config works from any directory in any MCP-compatible agent.
 
 ```bash
-bughunter mcp doctor   # verify SDK, tools, and paths
-bughunter mcp tools    # list the exposed tool catalog
+zh5 mcp doctor   # verify SDK, tools, and paths
+zh5 mcp tools    # list the exposed tool catalog
 ```
 
 ## Clients

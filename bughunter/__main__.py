@@ -1,8 +1,9 @@
 """Console-script entrypoints.
 
-`bughunter`        -> engine.main   (the recon/hunt/chat/mcp dispatcher; the
-                                     legacy install.sh symlinked engine.py here)
-`bughunter-agent`  -> agent.main    (the autonomous session runner)
+`zh5` / `zh5-scan` -> engine.main   (recon/scan/chat/mcp dispatcher;
+                                     install.sh symlinks engine.py as `zh5`)
+`zh5-agent`        -> agent.main    (the autonomous session runner)
+`bughunter`        -> legacy alias for `zh5`
 
 Both insert this package dir on sys.path first so the package's flat internal
 imports (`from brain import ...`, `from tools.scope_checker import ...`) resolve.

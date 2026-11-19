@@ -23,6 +23,6 @@
 | `bughunter_leads` / `next` / `update` | local | — | — |
 | `bughunter_program*` | external read | — | — |
 
-List at runtime: `bughunter mcp tools`.
+List at runtime: `zh5 mcp tools`.
 
 Backed by existing `bughunter/tools/recon_engine.sh`, `bughunter/tools/hunt.py`, `bughunter/tools/validate.py`, `bughunter/tools/lead_board.py`, `memory/*`, and `mcp/hackerone-mcp/`.

@@ -717,7 +717,7 @@ class LLMClient:
             raise RuntimeError(
                 f"{self.provider} returned HTTP 404 for model '{m}'. The model "
                 f"id is likely retired/decommissioned. List current models with "
-                f"`bughunter models` or GET {base}/models, then set BRAIN_MODEL "
+                f"`zh5 models` or GET {base}/models, then set BRAIN_MODEL "
                 f"to a supported one."
             )
         r.raise_for_status()

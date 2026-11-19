@@ -41,14 +41,14 @@ Defaults:
   ./install.sh                    Install for Claude Code globally
 
 Standalone (no subscription needed):
-  ./install.sh --agent standalone Install or update the 'bughunter' system command
+  ./install.sh --agent standalone Install or update the 'zh5' system command
   ./install.sh --agent mcp        Print MCP client config + install mcp Python SDK hint
                                   After install, type from anywhere:
-                                    bughunter help
-                                    bughunter setup
-                                    bughunter login
-                                    bughunter recon target.com
-                                    bughunter h target.com
+                                    zh5 help
+                                    zh5 setup
+                                    zh5 login
+                                    zh5 recon target.com
+                                    zh5 scan target.com
 
 Examples:
   ./install.sh --agent antigravity Install Antigravity / Gemini skills, rules & agents globally (~/.gemini/config)
@@ -289,8 +289,8 @@ install_antigravity() {
     echo "Antigravity discovers skills & rules in ~/.gemini/config (global) or .agents/ (project)."
     echo "Start hunting with Antigravity / Gemini AI Pro:"
     echo "  agy"
-    echo "  bughunter setup --provider antigravity"
-    echo "  bughunter login"
+    echo "  zh5 setup --provider antigravity"
+    echo "  zh5 login"
 }
 
 install_standalone() {
@@ -308,16 +308,16 @@ install_standalone() {
     # Make engine.py executable
     chmod +x "$engine"
 
-    # ── Install bughunter system command ──────────────────────────────────────
+    # ── Install zh5 system command (legacy bughunter alias kept) ──────────────
     # Prefer updating the currently active managed installation. This prevents
     # an old /usr/local/bin entry from shadowing a new ~/.local/bin symlink.
-    existing_cmd="$(command -v bughunter 2>/dev/null || true)"
-    if [ -n "${BBHUNTER_BIN_DIR:-}" ]; then
-        bin_dir="$BBHUNTER_BIN_DIR"
+    existing_cmd="$(command -v zh5 2>/dev/null || command -v bughunter 2>/dev/null || true)"
+    if [ -n "${BBHUNTER_BIN_DIR:-}${ZH5_BIN_DIR:-}" ]; then
+        bin_dir="${ZH5_BIN_DIR:-$BBHUNTER_BIN_DIR}"
     elif [ -n "$existing_cmd" ] && [[ -e "$existing_cmd" || -L "$existing_cmd" ]]; then
         if [ -L "$existing_cmd" ] && [ "$(basename "$(readlink "$existing_cmd")")" = "engine.py" ]; then
             bin_dir="$(dirname "$existing_cmd")"
-        elif [ -f "$existing_cmd" ] && grep -q "Standalone BugHunter CLI" "$existing_cmd" 2>/dev/null; then
+        elif [ -f "$existing_cmd" ] && grep -Eq "Standalone (ZH5 Scan|BugHunter) CLI" "$existing_cmd" 2>/dev/null; then
             bin_dir="$(dirname "$existing_cmd")"
         elif [ -w /usr/local/bin ]; then
             bin_dir="/usr/local/bin"
@@ -330,7 +330,8 @@ install_standalone() {
         bin_dir="$HOME/.local/bin"
     fi
 
-    target="$bin_dir/bughunter"
+    target="$bin_dir/zh5"
+    legacy_target="$bin_dir/bughunter"
     action="Installed"
     if [ -e "$target" ] || [ -L "$target" ]; then
         action="Updated"
@@ -349,14 +350,16 @@ install_standalone() {
     # as "${install_cmd[@]}" — same idiom as tools/_auth_helper.sh.
     ${install_cmd[@]+"${install_cmd[@]}"} mkdir -p "$bin_dir"
     ${install_cmd[@]+"${install_cmd[@]}"} ln -sfn "$engine" "$target"
+    ${install_cmd[@]+"${install_cmd[@]}"} ln -sfn "$engine" "$legacy_target"
 
     if [ -L "$target" ] && [ "$(readlink "$target")" = "$engine" ]; then
         echo "[+] $action: $target -> $engine"
+        echo "[+] Alias:   $legacy_target -> $engine"
     else
         echo "[!] Could not install or update $target" >&2
         echo "    Try: sudo ./install.sh --agent standalone" >&2
         echo "    Or add this to ~/.bashrc / ~/.zshrc:"
-        echo "    alias bughunter='python3 $engine'"
+        echo "    alias zh5='python3 $engine'"
         return 1
     fi
 
@@ -395,28 +398,28 @@ install_standalone() {
     echo "════════════════════════════════════════════════════"
     echo "  Done! Type from anywhere:"
     echo ""
-    echo "    bughunter setup"
-    echo "    bughunter models"
-    echo "    bughunter recon target.com"
-    echo "    bughunter hunt  target.com"
-    echo "    bughunter validate \"<finding>\""
-    echo "    bughunter chat"
+    echo "    zh5 setup"
+    echo "    zh5 models"
+    echo "    zh5 recon target.com"
+    echo "    zh5 scan  target.com"
+    echo "    zh5 validate \"<finding>\""
+    echo "    zh5 chat"
     echo "════════════════════════════════════════════════════"
     echo ""
 }
 
 install_mcp() {
     echo "════════════════════════════════════════════════════"
-    echo "  Agentic-Bug-Hunter MCP"
+    echo "  ZH5 Agentic Bug Hunter MCP"
     echo "════════════════════════════════════════════════════"
     echo ""
     echo "Server entry:"
     echo "  python3 $MCP_SRC/bughunter-mcp/server.py"
-    echo "  # or: bughunter mcp serve   (after standalone install)"
+    echo "  # or: zh5 mcp serve   (after standalone install)"
     echo ""
     echo "Doctor / tool catalog:"
-    echo "  bughunter mcp doctor"
-    echo "  bughunter mcp tools"
+    echo "  zh5 mcp doctor"
+    echo "  zh5 mcp tools"
     echo ""
     echo "Python SDK:"
     echo "  pip install 'mcp>=2.2.0'"

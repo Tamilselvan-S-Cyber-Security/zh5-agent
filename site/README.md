@@ -1,6 +1,6 @@
 # Site
 
-Landing page for [bughunter.fun](https://bughunter.fun).
+Landing page for [zh5.club](https://zh5.club).
 
 | File | Purpose |
 |:---|:---|

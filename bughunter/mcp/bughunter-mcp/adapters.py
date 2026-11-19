@@ -343,7 +343,7 @@ def generate_report_stub(target: str, finding_id: str | None = None) -> dict[str
         return {
             "status": "completed",
             "error": "INSUFFICIENT_EVIDENCE",
-            "summary": "No report artifacts — run /validate then /report (or bughunter report)",
+            "summary": "No report artifacts — run /validate then /report (or zh5 report)",
             "finding_id": finding_id,
             "next_action": "bughunter_validate",
         }

@@ -1,4 +1,4 @@
-# A → Z Tutorial — Finding Real Bugs with the bughunter.fun Toolkit
+# A → Z Tutorial — Finding Real Bugs with the zh5.club Toolkit
 
 This is the short, record-it-once walkthrough that takes you from
 zero to a submission-ready report.
@@ -32,7 +32,7 @@ scanner available and skips the rest gracefully.
 ## A. Install (30 sec)
 
 ```bash
-git clone https://github.com/Awarexone/Agentic-Bug-Hunter.git
+git clone https://github.com/Tamilselvan-S-Cyber-Security/Agentic-Bug-Hunter.git
 cd Agentic-Bug-Hunter
 chmod +x install.sh && ./install.sh
 ```

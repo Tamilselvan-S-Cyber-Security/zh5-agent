@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-engine.py — Standalone BugHunter CLI
+engine.py — Standalone ZH5 Scan CLI
 Works WITHOUT Claude Code or any AI subscription.
 
 Providers (auto-detected, first available wins):
@@ -30,17 +30,17 @@ Providers (auto-detected, first available wins):
                     docs: https://docs.requesty.ai
 
 Usage:
-  ./engine.py setup                        one-time config wizard
-  ./engine.py recon  <target>              recon + AI surface analysis
-  ./engine.py hunt   <target>              full hunt pipeline
-  ./engine.py validate "<finding>"         7-Question Gate on a finding
-  ./engine.py report [--findings-dir DIR]  write submission-ready report
-  ./engine.py chain  [--findings-dir DIR]  build A->B->C exploit chain
-  ./engine.py triage "<finding>"           fast triage (pass/kill/downgrade)
-  ./engine.py chat                         interactive Q&A shell
-  ./engine.py models                       list available models
-  ./engine.py status                       show hunt status
-  ./engine.py providers                    show all providers + API key status
+  zh5 setup                        one-time config wizard
+  zh5 recon  <target>              recon + AI surface analysis
+  zh5 scan   <target>              full ZH5 scan pipeline
+  zh5 validate "<finding>"         7-Question Gate on a finding
+  zh5 report [--findings-dir DIR]  write submission-ready report
+  zh5 chain  [--findings-dir DIR]  build A->B->C exploit chain
+  zh5 triage "<finding>"           fast triage (pass/kill/downgrade)
+  zh5 chat                         interactive Q&A shell
+  zh5 models                       list available models
+  zh5 status                       show scan status
+  zh5 providers                    show all providers + API key status
 """
 
 from __future__ import annotations
@@ -55,27 +55,31 @@ import textwrap
 from pathlib import Path
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
-HERE     = Path(__file__).resolve().parent  # resolve symlink first so /usr/local/bin/bughunter -> repo dir
+HERE     = Path(__file__).resolve().parent  # resolve symlink first so /usr/local/bin/zh5 -> repo dir
 AGENTS   = HERE / "agents"
 TOOLS    = HERE / "tools"
 # Writable output goes under a user data home, not the install dir, so the tool
 # works whether it runs from a git clone or a read-only pip install.
-# Override with BUGHUNTER_HOME; defaults to the clone dir if it is writable
-# (preserves legacy layout), else ~/.bughunter.
+# Override with ZH5_HOME / BUGHUNTER_HOME; defaults to the clone dir if writable,
+# else ~/.zh5 (falls back to ~/.bughunter).
 def _data_home():
     import os
-    env = os.environ.get("BUGHUNTER_HOME")
+    env = os.environ.get("ZH5_HOME") or os.environ.get("BUGHUNTER_HOME")
     if env:
         return Path(env).expanduser()
     if os.access(HERE, os.W_OK):
         return HERE
-    return Path.home() / ".bughunter"
+    zh5_home = Path.home() / ".zh5"
+    legacy = Path.home() / ".bughunter"
+    return zh5_home if zh5_home.exists() or not legacy.exists() else legacy
 
 DATA_HOME = _data_home()
 RECON    = DATA_HOME / "recon"
 FINDINGS = DATA_HOME / "findings"
 REPORTS  = DATA_HOME / "reports"
-CONFIG   = Path.home() / ".bughunter" / "config.json"
+_zh5_cfg = Path.home() / ".zh5" / "config.json"
+_legacy_cfg = Path.home() / ".bughunter" / "config.json"
+CONFIG = _zh5_cfg if _zh5_cfg.exists() or not _legacy_cfg.exists() else _legacy_cfg
 
 # ── Colors ─────────────────────────────────────────────────────────────────────
 GREEN  = "\033[0;32m"
@@ -135,7 +139,7 @@ COMMAND_ALIASES = {
     "status": {"status", "s"},
     "chat": {"chat", "ask"},
     "recon": {"recon", "r"},
-    "hunt": {"hunt", "h"},
+    "scan": {"scan", "hunt", "h"},
     "validate": {"validate", "v"},
     "triage": {"triage", "t"},
     "report": {"report", "rep"},
@@ -145,19 +149,19 @@ COMMAND_ALIASES = {
 
 def _print_quick_help():
     print(textwrap.dedent("""
-    BugHunter — fast commands
+    ZH5 Scan — fast commands
 
-    bughunter help                 Show full help
-    bughunter setup                Configure your AI provider
-    bughunter recon target.com     Map the attack surface
-    bughunter hunt target.com      Run the full hunt pipeline
-    bughunter validate "finding"   Run the 7-Question Gate
-    bughunter report               Write a submission-ready report
-    bughunter status               Show pipeline status
+    zh5 help                 Show full help
+    zh5 setup                Configure your AI provider
+    zh5 recon target.com     Map the attack surface
+    zh5 scan target.com      Run the full ZH5 scan pipeline
+    zh5 validate "finding"   Run the 7-Question Gate
+    zh5 report               Write a submission-ready report
+    zh5 status               Show pipeline status
 
     Short aliases:
       init=setup   p=providers   m=models   s=status   r=recon
-      h=hunt       v=validate    t=triage   rep=report   c=chain
+      hunt=scan    h=scan       v=validate  t=triage   rep=report   c=chain
     """).strip())
 
 
@@ -259,7 +263,7 @@ def _run_shell(cmd: list[str], cwd: str | None = None, timeout: int = 3600,
 
 def cmd_setup(args):
     """Interactive setup wizard."""
-    header("BugHunter Setup")
+    header("zh5 setup")
 
     providers = {
         "1":  ("ollama",     "Ollama     (local, FREE)       — needs ollama running locally"),
@@ -486,7 +490,7 @@ def cmd_login(args):
             info(f"Tier: {tier} | Project: {proj}")
             info(f"Credentials file: {creds.get('_source_path', BUGHUNTER_OAUTH_FILE)}")
         else:
-            warn("Not logged in with Google OAuth. Run: bughunter login")
+            warn("Not logged in with Google OAuth. Run: zh5 login")
         return
 
     no_browser = bool(getattr(args, "no_browser", False))
@@ -787,7 +791,7 @@ def cmd_chain(args):
 
 def cmd_chat(args):
     """Interactive Q&A shell."""
-    header("BugHunter Chat")
+    header("zh5 chat")
     client = _get_client()
     if not client.available:
         err("No AI provider available. Run: ./engine.py setup")
@@ -912,8 +916,8 @@ def _print_banner():
     for line, color in LINES:
         print(f"{color}{line}{NC}")
     print()
-    print(f"  {G3}by {W}AwareXone{NC}  {G3}·{NC}  {G2}awarexone.com{NC}  {G3}·{NC}  {G1}bughunter.fun{NC}")
-    print(f"  {G3}github.com/{G2}Awarexone{G3}/Agentic-Bug-Hunter{NC}")
+    print(f"  {G3}by {W}ZH5{NC}  {G3}·{NC}  {G2}zh5.club{NC}  {G3}·{NC}  {G1}Tamilselvan-S-Cyber-Security{NC}")
+    print(f"  {G3}github.com/{G2}Tamilselvan-S-Cyber-Security{G3}/Agentic-Bug-Hunter{NC}")
     print(f"  {G3}free · open · no subscription required{NC}")
     print()
 
@@ -923,22 +927,25 @@ def _print_banner():
 def main():
     argv = _normalize_cli_argv(sys.argv[1:])
     parser = argparse.ArgumentParser(
-        prog="engine.py",
-        description="Standalone BugHunter Engine — works without Claude Code",
+        prog="zh5",
+        description="Standalone ZH5 Scan Engine — works without Claude Code",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""
         Free setup (zero subscription):
           curl -fsSL https://ollama.ai/install.sh | sh
           ollama pull qwen2.5:14b
-          ./engine.py setup
-          ./engine.py recon target.com
+          zh5 setup
+          zh5 recon target.com
 
         Free cloud (Groq — very fast):
           export GROQ_API_KEY=gsk_...
-          ./engine.py recon target.com
+          zh5 recon target.com
+
+        Full scan:
+          zh5 scan target.com
 
         Switch providers anytime:
-          ./engine.py setup
+          zh5 setup
         """),
     )
     parser.add_argument("--provider", "-p",
@@ -973,7 +980,7 @@ def main():
     p_recon = sub.add_parser("recon", aliases=["r"], help="Recon + AI surface analysis")
     p_recon.add_argument("target", help="Target domain or IP")
 
-    p_hunt = sub.add_parser("hunt", aliases=["h"], help="Full hunt pipeline")
+    p_hunt = sub.add_parser("scan", aliases=["hunt", "h"], help="Full ZH5 scan pipeline")
     p_hunt.add_argument("target", help="Target domain or IP")
     p_hunt.add_argument("--quick", action="store_true", help="Quick mode (fewer checks)")
 
@@ -1027,7 +1034,9 @@ def main():
         "providers": cmd_providers,
         "models":    cmd_models,
         "recon":     cmd_recon,
+        "scan":      cmd_hunt,
         "hunt":      cmd_hunt,
+        "h":         cmd_hunt,
         "validate":  cmd_validate,
         "triage":    cmd_triage,
         "report":    cmd_report,

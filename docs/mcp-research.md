@@ -78,7 +78,7 @@ Tasks are an **extension** (`io.modelcontextprotocol/tasks`), not core. Check cl
 
 ## Repo findings (inspection)
 
-- No native BugHunter MCP server yet — only Burp/Caido **client configs** and HackerOne **CLI/API** (not MCP protocol).
+- No native zh5 mcp server yet — only Burp/Caido **client configs** and HackerOne **CLI/API** (not MCP protocol).
 - Add `mcp/bughunter-mcp/` as sibling; do not replace existing integrations.
 - Active tools must wrap `ScopeChecker` + `AutopilotGuard` (agent path), not raw `engine.py`/`hunt.py`.
 - Discovered hosts ≠ authorized; RateLimiter exists but is not called from `check_request` today.

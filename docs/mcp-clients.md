@@ -12,7 +12,7 @@ Primary transport: **stdio** (dual-era MCP SDK v2).
 Run from the repo root so relative paths resolve.
 
 ```bash
-bughunter mcp doctor
+zh5 mcp doctor
 ```
 
 Do not enable `BBHUNT_MCP_APPROVE=1` in shared configs by default.

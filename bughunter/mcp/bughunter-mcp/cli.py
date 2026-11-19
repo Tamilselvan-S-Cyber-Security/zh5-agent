@@ -1,4 +1,4 @@
-"""CLI helpers: bughunter mcp serve | doctor | tools."""
+"""CLI helpers: zh5 mcp serve | doctor | tools."""
 
 from __future__ import annotations
 
@@ -85,7 +85,7 @@ def cmd_serve() -> int:
 def main(argv: list[str] | None = None) -> int:
     argv = list(argv if argv is not None else sys.argv[1:])
     if not argv or argv[0] in {"-h", "--help", "help"}:
-        print("Usage: bughunter mcp [serve|doctor|tools]")
+        print("Usage: zh5 mcp [serve|doctor|tools]")
         return 0
     cmd = argv[0]
     if cmd == "serve":
